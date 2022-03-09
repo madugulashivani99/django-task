@@ -1,0 +1,183 @@
+<html>
+<body>
+    <form action="{% url 'output' %}" method="POST">
+        {% csrf_token %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style type="text/css">
+ 
+        body{width: 600px;
+            font-family: calibri;
+            padding: 0;
+            margin: 0 auto;
+            }
+        .container{
+            border:1px solid #7ddaff;
+            background-color: #b4c8d0;
+            margin: 0px auto;
+            padding: 30px;
+            border-radius: 4px;
+    
+        }
+        .form-control{
+            padding: 10px;
+            border:#bdbdbd 1px solid;
+            border-radius: 4px;
+            background-color: #FFF;
+            width: 50%;
+        }
+        .form-group{
+            padding-bottom: 15px;
+            padding-left: 150px;
+    
+        }
+    
+        </style>
+    
+
+      <div class="container">
+          <h2><center>Please give the customer,product and servername</center></h2>
+          
+          <div class="form-group">
+              <label for="customer">Select customer:</label>
+              <select name="customer" class= "form-control" id="customer">
+                  <option value="">select customer</option>
+                  
+              </select>		
+          </div>
+  
+          <div class="form-group">
+              <label for="product">Select product:</label>
+              <select name="product" id="product"class="form-control">
+                  <option value="">select product</option>
+              </select>		
+          </div>
+  
+          <div class="form-group">
+              <label for="servername">Select servername:</label>
+              <select name="servers"  id="servers" class= "form-control">
+                  <option value="">select servername</option>
+              </select>		
+          </div>
+            <center><input type="submit"></center>
+        </div>
+<script>
+   $(document).ready(function(){
+       $.ajax({
+           type:'GET',
+           url: "{% url 'get_customer' %}",
+           contentType: "application/json",
+           success: function(response)
+            {
+                
+                console.log(response.customers);
+                $('#customer').find('option').remove().end();
+                var option = $('<option>', {
+                             value: '',
+                             html: 'Select Option'
+                });
+                $("#customer").append(option);
+                
+                
+                for(var key in response.customers) {
+                    
+                   
+                    option = $('<option>', {
+                    value: response.customers[key]['id'],
+                    html: response.customers[key]['name']
+
+                    });
+                    $("#customer").append(option);
+                    
+                }
+            }      
+ })
+   })
+
+
+
+
+$(function() {
+$("#customer").change(function() {
+var c_id = this.value;
+//alert(c_id);
+$.ajax({
+
+
+type:'GET',
+data:"c_id1="+c_id,
+url: "{% url 'get_product' %}",
+
+dataType: "JSON",
+success: function(response){
+//alert(object.keys(response).length);
+$('#product')
+.find('option')
+.remove()
+.end();
+var option = $('<option>', {
+value: '',
+html: 'select option'
+
+});
+$("#product").append(option);
+for (var key in response.products) {
+    console.log(response.products);
+option = $('<option>', {
+value: response.products[key]['id'],
+html: response.products[key]['name']
+
+});
+$("#product").append(option);
+}
+
+}
+});
+});
+});
+
+
+
+$(function() {
+$("#product").change(function() {
+var p_id = this.value;
+//alert(c_id);
+$.ajax({
+
+
+type:'GET',
+data:"p_id1="+p_id,
+url: "{% url 'get_server' %}",
+
+dataType: "JSON",
+success: function(response){
+//alert(object.keys(response).length);
+$('#servers')
+.find('option')
+.remove()
+.end();
+var option = $('<option>', {
+value: '',
+html: 'select option'
+
+});
+$("#servers").append(option);
+for (var key in response.server) {
+    console.log(response.server);
+option = $('<option>', {
+value: response.server[key]['id'],
+html: response.server[key]['name']
+
+});
+$("#servers").append(option);
+}
+
+}
+});
+});
+});
+
+</script>
+</form>
+</body>
+</html>
